@@ -4,19 +4,15 @@ import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-
-import Dashboard from './src/screens/Dashboard';
-import Incomes from './src/screens/Incomes';
-import Outcomes from './src/screens/Outcomes';
+import {ThemeProvider} from 'styled-components';
+import {dark, light} from './src/theme';
+import RootStack from './src/navigators/RootStack';
 
 export type RootStackParamList = {
     Dashboard: undefined;
     Incomes: undefined;
     Outcomes: undefined;
 };
-
-const Stack = createStackNavigator<RootStackParamList>();
 
 const App = () => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -27,18 +23,16 @@ const App = () => {
     };
 
     return (
-        <NavigationContainer>
-            <SafeAreaView style={backgroundStyle}>
-                <StatusBar
-                    barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-                />
-                <Stack.Navigator initialRouteName="Dashboard">
-                    <Stack.Screen name="Dashboard" component={Dashboard} />
-                    <Stack.Screen name="Incomes" component={Incomes} />
-                    <Stack.Screen name="Outcomes" component={Outcomes} />
-                </Stack.Navigator>
-            </SafeAreaView>
-        </NavigationContainer>
+        <ThemeProvider theme={dark}>
+            <NavigationContainer>
+                <SafeAreaView style={backgroundStyle}>
+                    <StatusBar
+                        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+                    />
+                    <RootStack />
+                </SafeAreaView>
+            </NavigationContainer>
+        </ThemeProvider>
     );
 };
 
