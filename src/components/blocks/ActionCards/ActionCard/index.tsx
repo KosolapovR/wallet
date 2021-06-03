@@ -1,10 +1,11 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Pressable, Text} from 'react-native';
 import styled from 'styled-components/native';
 import {actionType} from '../index';
 
 type Props = {
     actionEntity: actionType;
+    handleClick: () => void;
 };
 
 const StyledRedText = styled.Text`
@@ -29,12 +30,17 @@ const StyledWrapper = styled.View`
     padding: 10px;
 `;
 
-function ActionCard({actionEntity}: Props) {
+function ActionCard({actionEntity, handleClick}: Props) {
     return (
-        <StyledWrapper
-            style={{overflow: 'hidden', backgroundColor: actionEntity.color}}>
-            <Text>{actionEntity.amount}</Text>
-        </StyledWrapper>
+        <Pressable onPress={handleClick}>
+            <StyledWrapper
+                style={{
+                    overflow: 'hidden',
+                    backgroundColor: actionEntity.color,
+                }}>
+                <Text>{actionEntity.amount}</Text>
+            </StyledWrapper>
+        </Pressable>
     );
 }
 

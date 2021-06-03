@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
-import {Platform} from 'react-native';
+import React from 'react';
 import Dashboard from '../../screens/Dashboard';
 import Incomes from '../../screens/Incomes';
 import Outcomes from '../../screens/Outcomes';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useTheme} from 'styled-components';
 import {ThemeType} from '../../theme';
-import {Button, DatePicker, Text} from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
 import {RootStackParamList} from '../../../App';
+import {NavigationProp} from '@react-navigation/native';
+import IconButton from '../../components/IconButton';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {View} from 'react-native';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -24,20 +25,30 @@ const basicHeaderOptions = {
     },
     cardStyle: {backgroundColor: 'transparent'},
 };
-
-const HeaderRight = () => {
+const HeaderLeft = ({navigation}: {navigation: NavigationProp<any>}) => {
     return (
-        <Button>
-            <Icon name="date" size={25} color="#900" />
-            <Text>Date</Text>
-        </Button>
+        <View style={{paddingLeft: 15, paddingTop: 20}}>
+            <IconButton
+                onPress={() => navigation.goBack()}
+                icon={<Icon size={15} name="chevron-left" />}
+                backgroundColor={'transparent'}
+            />
+        </View>
     );
 };
 
-const getHeader = ({title, theme}: {title: string; theme: ThemeType}) => ({
+const getHeader = ({
+    navigation,
+    title,
+    theme,
+}: {
+    navigation: NavigationProp<any>;
+    title: string;
+    theme: ThemeType;
+}) => ({
     ...basicHeaderOptions,
     headerTitle: title,
-    headerRight: () => <HeaderRight />,
+    headerLeft: () => <HeaderLeft navigation={navigation} />,
     headerStyle: {
         ...basicHeaderOptions.headerStyle,
         backgroundColor: theme.background,
@@ -52,14 +63,26 @@ function RootStack() {
             <Stack.Screen
                 name="Dashboard"
                 component={Dashboard}
-                options={({route}) => ({
+                options={({route, navigation}) => ({
                     ...getHeader({
+                        navigation,
+                        title: '',
+                        theme,
+                    }),
+                    headerLeft: () => <></>,
+                })}
+            />
+            <Stack.Screen
+                name="Incomes"
+                component={Incomes}
+                options={({route, navigation}) => ({
+                    ...getHeader({
+                        navigation,
                         title: '',
                         theme,
                     }),
                 })}
             />
-            <Stack.Screen name="Incomes" component={Incomes} />
             <Stack.Screen name="Outcomes" component={Outcomes} />
         </Stack.Navigator>
     );
